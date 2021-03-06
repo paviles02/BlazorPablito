@@ -1,0 +1,26 @@
+﻿@page "/listaMaestros"
+@using BlazorPablito.Shared
+@inject HttpClient http
+
+@inject HttpClient http
+
+
+
+@code{
+    string[] cabecera = { "ID", "Nombre" };
+}
+
+<VisorTabla micabecera="cabecera" listaDato="listaMaestros" />
+
+@code {
+    private MaestroModel[] listaMaestros;
+
+    protected override async Task OnInitializedAsync()
+    {
+        listaMaestros = await http.GetFromJsonAsync<MaestroModel[]>("api/Maestro/Get");
+    }
+
+
+
+
+}

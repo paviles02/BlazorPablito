@@ -1,0 +1,19 @@
+﻿@page "/editarMaestro/{Id}"
+
+@using BlazorPablito.Shared
+@inject HttpClient http
+<h1>Editar</h1>
+
+<FormularioMaestro modelo="mimodelo"/>
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+
+    public MaestroModel mimodelo = new MaestroModel();
+
+    protected async override Task OnParametersSetAsync()
+    {
+        mimodelo = await http.GetFromJsonAsync<MaestroModel>("api/Maestro/obtenerMaestro/" + Id);
+    }
+}

@@ -1,0 +1,44 @@
+﻿
+@if (listaDato == null)
+{
+    <h4>Loading...</h4>
+}
+else
+{
+
+
+    
+
+    <table class="table table-striped">
+        <thead >
+            <tr>
+                @foreach (var item in micabecera)
+                {
+                    <td>@item</td>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (object obj in listaDato)
+            {
+                <tr>
+                    @foreach (var prop in obj.GetType().GetProperties())
+                    {
+                        <td>@prop.GetValue(obj)</td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    [Parameter]
+    public string[] micabecera { get; set; }
+
+    [Parameter]
+    public object[] listaDato { get; set; }
+
+   
+
+}

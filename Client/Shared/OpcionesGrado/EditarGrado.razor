@@ -1,0 +1,17 @@
+﻿@page "/editarGrado/{Id}"
+@using BlazorPablito.Shared
+@inject HttpClient http
+<h1>Editar</h1>
+
+<FormularioGrado modelo="modelo" />
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+
+    public GradoModel modelo = new GradoModel();
+    protected async override Task OnParametersSetAsync()
+    {
+        modelo = await http.GetFromJsonAsync<GradoModel>("api/NuevoGrado/obtenerGrado/" + Id);
+    }
+}

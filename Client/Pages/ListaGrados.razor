@@ -1,0 +1,26 @@
+﻿@page "/listaGrados"
+@using BlazorPablito.Shared
+@inject HttpClient http
+
+@inject HttpClient http
+
+
+
+@code{
+    string[] cabecera = { "ID", "Grado" };
+}
+
+<VisorTabla micabecera="cabecera" listaDato="listaGrados" />
+
+@code {
+    private GradoModel[] listaGrados;
+
+    protected override async Task OnInitializedAsync()
+    {
+        listaGrados = await http.GetFromJsonAsync<GradoModel[]>("api/Grado/Get");
+    }
+
+
+
+
+}

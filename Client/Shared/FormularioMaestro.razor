@@ -1,0 +1,59 @@
+﻿@using BlazorPablito.Shared
+@inject HttpClient http
+@inject IRepositorio repositorio
+@inject NavigationManager navigationManager
+
+<EditForm Model="@modelo" OnValidSubmit="GuardarDatos">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+
+    
+    @if (modelo.IdMaestro != 0)
+    {
+        <div class="form-group">
+            <label>Id Maestro</label>
+            <input class="form-control" readonly type="number" @bind="modelo.IdMaestro" />
+        </div>
+    }
+
+    <div class="form-group">
+        <label>Nombre del Maestro:</label>
+        <InputText class="form-check form-control"
+                   @bind-Value="modelo.NombreMaestro" />
+    </div>
+
+    
+    <input type="submit" value="Guardar" class="btn btn-primary" />
+    
+    <NavLink href="/lstMaestros">
+        <input type="button" value="Regresar" class="btn btn-danger" />
+    </NavLink>
+</EditForm>
+
+
+@code {
+    [Parameter]
+    public MaestroModel modelo { get; set; } = new MaestroModel();
+    
+    public async Task GuardarDatos()
+    {
+
+        var response = await repositorio.Post("api/Maestro/Guardar", modelo);
+        if (response.Error)
+        {
+            var body = await response.HttpResponseMessage.Content.ReadAsStringAsync();
+            Console.WriteLine(body);
+        }
+        else
+        {
+            navigationManager.NavigateTo("/lstMaestros");
+        }
+
+    }
+
+
+
+
+}
+

@@ -1,0 +1,58 @@
+﻿@page "/lstMaestros"
+@using BlazorPablito.Shared
+@inject HttpClient http
+
+
+
+@code {
+    string[] cabecera = { "ID", "Nombre" };
+}
+
+<div class="@tipoMsg">
+    @msg
+</div>
+
+<ListaGenerica cabeceras=cabecera
+               lista=listaMaestros
+               eventEliminar="EliminarDatos"
+               eventBusqueda="BusquedaMaestro"
+               rtaAgregar="agregarMaestro"
+               rtaEditar="editarMaestro" />
+
+@code {
+    private string tipoMsg = "", msg = "";
+
+    private MaestroModel[] listaMaestros;
+
+    protected override async Task OnInitializedAsync()
+    {
+        listaMaestros = await http.GetFromJsonAsync<MaestroModel[]>("api/Maestro/Get");
+    }
+
+    public async Task BusquedaMaestro(string data)
+    {
+        tipoMsg = ""; msg = "";
+        listaMaestros = await http.GetFromJsonAsync<MaestroModel[]>("api/Maestro/Filtrar/" + data);
+
+    }
+
+
+
+    public async Task EliminarDatos(string data)
+    {
+        int respuesta = await http.GetFromJsonAsync<int>("api/Maestro/EliminarMaestro/" + data);
+        if (respuesta == 1)
+        {
+            data = "";
+            listaMaestros = await http.GetFromJsonAsync<MaestroModel[]>("api/Maestro/Get");
+            tipoMsg = "alert alert-primary";
+            msg = "maestro eliminado";
+        }
+        else
+        {
+            tipoMsg = "alert alert-danger";
+            msg = "Accion no pudo procesarse, es posible que el Grado ya cuente con registros";
+        }
+    }
+
+}

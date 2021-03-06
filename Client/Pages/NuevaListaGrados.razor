@@ -1,0 +1,58 @@
+﻿@page "/nuevaListaGrado"
+@inject HttpClient http
+@using BlazorPablito.Shared
+
+
+
+@code{
+    string[] cabecerasTabla = { "Codigo", "Grado", "Seccion", "Opciones" };
+}
+<div class="@tipoMsg">
+    @msg
+</div>
+<ListaGenerica cabeceras=cabecerasTabla
+               lista=listaGrados
+               eventEliminar="EliminarDatos"
+               eventBusqueda="BusquedaGrado"
+               rtaAgregar="agregarGrado"
+               rtaEditar="editarGrado" />
+
+@code {
+    private string tipoMsg = "", msg = "";
+    private GradoModel[] listaGrados;
+
+    protected override async Task OnInitializedAsync()
+    {
+        listaGrados = await http.GetFromJsonAsync<GradoModel[]>("api/NuevoGrado/Get");
+    }
+
+    public async Task BusquedaGrado(string data)
+    {
+        tipoMsg = ""; msg = "";
+        listaGrados = await http.GetFromJsonAsync<GradoModel[]>("api/NuevoGrado/Filtrar/" + data);
+
+    }
+
+    public async Task EliminarDatos(string data)
+    {
+        int respuesta = await http.GetFromJsonAsync<int>("api/NuevoGrado/EliminarGrado/" + data);
+        if (respuesta == 1)
+        {
+            data = "";
+            listaGrados = await http.GetFromJsonAsync<GradoModel[]>("api/NuevoGrado/Filtrar/" + data);
+            tipoMsg = "alert alert-primary";
+            msg = "Grado eliminado con exito";
+        }
+        else
+        {
+            tipoMsg = "alert alert-danger";
+            msg = "Accion no pudo procesarse, es posible que el Grado ya cuente con registros";
+        }
+    }
+
+}
+
+
+
+
+
